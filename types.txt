@@ -1,0 +1,44 @@
+R-Type
+add    	$rd, $rs, $rt   //RTYPE1
+addu 	$rd, $rs, $rt
+and		$rd, $rs, $rt
+nor 	$rd, $rs, $rt
+or 		$rd, $rs, $rt
+slt 	$rd, $rs, $rt
+sltu 	$rd, $rs, $rd
+sub 	$rd, $rs, $rt
+subu 	$rd, $rs, $rt
+sll 	$rd, $rs, 0x00  //RTYPE2
+srl 	$rd, $rs, 0x00
+sra 	$rd, $rt, 0x00
+div 	$rs, $rt 		//RTYPE3
+divu 	$rs, $rt
+mult 	$rs, $rt
+multu 	$rs, $rt
+mfhi 	$rd 			//RTYPE4
+mflo 	$rd
+mfco 	$rd
+jr 						//RTYPE5
+
+I-Type
+addi   	$rd, $rs, 0x00  //ITYPE1
+addiu	$rd, $rs, 0x00
+andi	$rd, $rs, 0x00
+ori 	$rd, $rs, 0x00
+slti 	$rd, $rs, 0x00
+sltiu 	$rd, $rs, 0x00
+beq		$rd, $rs, label //ITYPE2
+bne 	$rd, $rs, label
+lbu 	$rd, 0x00($rs)  //ITYPE3
+lhu 	$rd, 0x00($rs)
+ll 		$rd, 0x00($rs)
+lw 		$rd, 0x00($rs)
+sb 		$rd, 0x00($rs)
+sc 		$rd, 0x00($rs)
+sh		$rd, 0x00($rs)
+sw 		$rd, 0x00($rs)
+lui 	$rd, 0x00  		//ITYPE4
+
+J-Type
+j		label
+jal 	label
