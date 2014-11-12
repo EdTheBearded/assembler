@@ -1,6 +1,10 @@
 Simple MIPS assembler using FLEX/BISON and C. 
 Implemented instructions on types.txt, also grouped by their "subtypes" under R/I/J-Types.
 
+v0.1
+Now with error handling and helpful error messages.
+Still no binary though.
+
 v0.0
 Parsing text and checking syntax. Still pretty simple and errors are not handled.
 Still isn't generating binary code.
