@@ -21,7 +21,7 @@ int debug=0;
 
  static
  char dumpChar(char c) {
- 	if (  isprint(c)  )
+ 	if (  isprint((int)c)  )
  		return c;
  	return '@';
  }
@@ -97,7 +97,6 @@ void DumpRow(void) {
 static
 int getNextLine(void) {
 
- 	int i;
  	char *p;
 
  	nBuffer = 0;

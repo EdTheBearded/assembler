@@ -3,6 +3,8 @@
 
 #include "asm.h"
 
+#define YY_NO_INPUT
+
 #define YY_INPUT(buf,result,max_size)  {\
     result = GetNextChar(buf, max_size); \
     if (  result <= 0  ) \
@@ -10,6 +12,8 @@
     }
 
 %}
+
+%option nounput
 
 %x IN_COMMENT
 %x IN_ERROR

@@ -3,6 +3,7 @@ BISON 		= bison
 FLEX 		= flex
 
 LIBS 		= -lfl
+FLAGS		= -Wall -O3
 
 TARGET		= asm
 BISON_OBJ 	= bis
@@ -12,13 +13,13 @@ FILES		= $(BISON_OBJ).tab.c lex.yy.c asm.c
 all:
 	$(BISON) -d $(BISON_OBJ).y
 	$(FLEX) $(FLEX_OBJ).l
-	$(CC) $(FILES) $(LIBS) -o $(TARGET)
+	$(CC) $(FLAGS) $(FILES) $(LIBS) -o $(TARGET)
 
 #debug flex
 flex:
 	$(BISON) -d $(BISON_OBJ).y
 	$(FLEX) $(FLEX_OBJ).l
-	$(CC) lex.yy.c $(LIBS)  -o l
+	$(CC) $(FLAGS) lex.yy.c $(LIBS)  -o l
 
 clean:
 	rm -rf $(BISON_OBJ).tab.* lex.yy.c $(TARGET)
