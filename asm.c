@@ -89,6 +89,7 @@ void DumpRow(void) {
     	for (i=start; i<=end; i++)
     		fprintf(stdout, "^");
     }
+    putchar('\n');
 
 }
 
