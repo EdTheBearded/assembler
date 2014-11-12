@@ -1,4 +1,4 @@
-lw     $t0, 4($gp)       # fetch N
+lw     $t0$$,$ 4($gp)       # fetch N
     mult   $t0, $t0     # N*N
     lw     $t1, 4($gp)       # fetch N
     ori    $t2, $zero, 3     # 3

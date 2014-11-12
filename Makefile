@@ -7,12 +7,12 @@ LIBS 		= -lfl
 TARGET		= asm
 BISON_OBJ 	= bis
 FLEX_OBJ 	= mips
-
+FILES		= $(BISON_OBJ).tab.c lex.yy.c asm.c
 
 all:
 	$(BISON) -d $(BISON_OBJ).y
 	$(FLEX) $(FLEX_OBJ).l
-	$(CC) $(BISON_OBJ).tab.c lex.yy.c $(LIBS) -o $(TARGET)
+	$(CC) $(FILES) $(LIBS) -o $(TARGET)
 
 #debug flex
 flex:
