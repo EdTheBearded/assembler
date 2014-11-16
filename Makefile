@@ -1,4 +1,4 @@
-CC 			= gcc
+CC 		= gcc
 BISON 		= bison
 FLEX 		= flex
 
@@ -8,7 +8,7 @@ FLAGS		= -Wall -O3
 TARGET		= asm
 BISON_OBJ 	= bis
 FLEX_OBJ 	= mips
-FILES		= $(BISON_OBJ).tab.c lex.yy.c asm.c
+FILES		= $(BISON_OBJ).tab.c lex.yy.c asm.c err.c
 
 all:
 	$(BISON) -d $(BISON_OBJ).y

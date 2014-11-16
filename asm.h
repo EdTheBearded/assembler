@@ -1,47 +1,30 @@
-/*! @file ccalc.h
- * @brief Include for all modules
- *********************************************************************
- * a simple calculator with variables
- * 
- * sample-files for a artikel in developerworks.ibm.com
- * Author: Christian Hagen, chagen@de.ibm.com
- * 
- * @par ccalc.h
- * includes, prototypes & types
- * 
- *********************************************************************
- */
-#ifndef CCALC_H_
-#define CCALC_H_
+#ifndef __ASM_H__
+#define __ASM_H__
 
-#include <stdio.h>
-#include <math.h>
-#include <ctype.h>
-#include <string.h>
-#include <memory.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <float.h>
-#include "bis.tab.h"
+#include "err.h"
 
-/*
- * global variable
- */
-extern int debug;
+label_t *label = NULL, *l_tail = NULL;
+inst_t *inst_h = NULL, *i_tail = NULL;
 
-/*
- * lex & parse
- */
-extern int yylex(void);
-extern int yyparse(void);
-extern void yyerror(const char*);
+int addr = 0;
 
-/*
- * ccalc.c
- */
-extern void DumpRow(void); 
-extern int GetNextChar(char *b, int maxBuffer);
-extern void BeginToken(char*);
-extern void PrintError(const char *s, ...);
+typedef struct label_s{
+	int addr;
+	int line;
+	char *name;
+	struct label_s *next;
+} label_t;
 
-#endif /*CCALC_H_*/
+typedef struct inst_s{
+	int line;
+	char *name;
+	char *rs, *rt, *rd;
+	int shamt;
+	int imm;	
+} inst_t;
+
+void add_label(label_t *tail, int addr, int line, char *name);
+
+void add_inst(inst_t *tail, int line, char *name, char *rs, char *rt, char *rd, int shamt, int imm);
+
+#endif
