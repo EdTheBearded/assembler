@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>
 
+#include "err.h"
 #include "asm.h"
 
 #define YY_NO_INPUT
@@ -54,9 +55,9 @@
 	":"								BeginToken(yytext); return COLON;
 	([a-zA-z]|"_")([a-zA-Z0-9]|"_")*				BeginToken(yytext); yylval.s = strdup(yytext); return ID;
 	[0-9][0-9]*|"-"[0-9][0-9]*					BeginToken(yytext); yylval.ival = atoi(yytext); return INT;
-	"0b"[0-1][0-1]*							BeginToken(yytext); yylval.ival = atoi(yytext); return INT;
+	"0b"[0-1][0-1]*							BeginToken(yytext); yylval.ival = btoi(yytext); return INT;
 
-	"0x"[0-9a-fA-F][0-9a-fA-F]*					BeginToken(yytext); yylval.ival = atoi(yytext); return INT;
+	"0x"[0-9a-fA-F][0-9a-fA-F]*					BeginToken(yytext); yylval.ival = htoi(yytext); return INT;
 	.								BeginToken(yytext); return yytext[0];
 }
 

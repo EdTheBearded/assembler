@@ -35,24 +35,6 @@ extern FILE *infile;
  }
 
 
-extern
-void DumpRow(void) {
-	if (  nRow == 0  ) {
-		int i;
-		for (i=1; i<71; i++)
-			if (  i % 10 == 0  )
-		    	fprintf(stdout, ":"); 
-		  	else if (  i % 5 == 0  )
-		    	fprintf(stdout, "+"); 
-		  	else
-		    	fprintf(stdout, ".");
-		fprintf(stdout, "\n"); 
-	}
-	else 
-		fprintf(stdout, "%.*s", lBuffer, buffer);
-}
-
-
  extern
  void PrintError(const char *errorstring, ...) {
  	
@@ -68,9 +50,10 @@ void DumpRow(void) {
     vsprintf(errmsg, errorstring, args);
     va_end(args);
 
-	fprintf(stdout, "file:%d:%d: %s\n", nRow, start, errmsg);
+	printf("file:%d:%d: %s\n", nRow, start, errmsg);
   
-  	DumpRow();
+  	fprintf(stdout, "%.*s", lBuffer, buffer);
+  	
 	if (  eof  ) {
     	for (i=0; i<lBuffer; i++)
     		fprintf(stdout, " ");

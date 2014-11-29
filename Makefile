@@ -5,21 +5,24 @@ FLEX 		= flex
 LIBS 		= -lfl
 FLAGS		= -Wall -O3
 
+SRCFOLDER 	= src
 TARGET		= asm
-BISON_OBJ 	= bis
-FLEX_OBJ 	= mips
-FILES		= $(BISON_OBJ).tab.c lex.yy.c asm.c err.c
+BISON_SRC 	= bis
+FLEX_SRC 	= mips
+SOURCES		= asm.c err.c $(BISON_SRC).tab.c lex.yy.c
+OBJECTS		= $(addprefix $(SRCFOLDER)/, $(SOURCES))
 
 all:
-	$(BISON) -d $(BISON_OBJ).y
-	$(FLEX) $(FLEX_OBJ).l
-	$(CC) $(FLAGS) $(FILES) $(LIBS) -o $(TARGET)
+	$(BISON) -d $(addprefix $(SRCFOLDER)/, $(BISON_SRC).y) -o $(SRCFOLDER)/$(BISON_SRC).tab.c
+	$(FLEX) $(addprefix $(SRCFOLDER)/, $(FLEX_SRC).l)
+	mv lex.yy.c $(SRCFOLDER)/
+	$(CC) $(FLAGS) $(OBJECTS) $(LIBS) -o $(TARGET)
 
 #debug flex
 flex:
-	$(BISON) -d $(BISON_OBJ).y
-	$(FLEX) $(FLEX_OBJ).l
+	$(BISON) -d $(addprefix $(SRCFOLDER)/, $(BISON_SRC).y)
+	$(FLEX) $(FLEX_SRC).l
 	$(CC) $(FLAGS) lex.yy.c $(LIBS)  -o l
 
 clean:
-	rm -rf $(BISON_OBJ).tab.* lex.yy.c $(TARGET)
+	rm -rf $(addprefix $(SRCFOLDER)/, $(BISON_SRC).tab.*) $(addprefix $(SRCFOLDER)/, lex.yy.c) $(TARGET)

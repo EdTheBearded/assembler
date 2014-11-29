@@ -18,26 +18,26 @@ multu 	$rs, $rt
 mfhi 	$rd 			//RTYPE4
 mflo 	$rd
 mfco 	$rd
-jr 						//RTYPE5
+jr 		$rs
 
 I-Type
-addi   	$rd, $rs, 0x00  //ITYPE1
-addiu	$rd, $rs, 0x00
-andi	$rd, $rs, 0x00
-ori 	$rd, $rs, 0x00
-slti 	$rd, $rs, 0x00
-sltiu 	$rd, $rs, 0x00
-beq		$rd, $rs, label //ITYPE2
-bne 	$rd, $rs, label
-lbu 	$rd, 0x00($rs)  //ITYPE3
-lhu 	$rd, 0x00($rs)
-ll 		$rd, 0x00($rs)
-lw 		$rd, 0x00($rs)
-sb 		$rd, 0x00($rs)
-sc 		$rd, 0x00($rs)
-sh		$rd, 0x00($rs)
-sw 		$rd, 0x00($rs)
-lui 	$rd, 0x00  		//ITYPE4
+addi   	$rt, $rs, 0x00  //ITYPE1
+addiu	$rt, $rs, 0x00
+andi	$rt, $rs, 0x00
+ori 	$rt, $rs, 0x00
+slti 	$rt, $rs, 0x00
+sltiu 	$rt, $rs, 0x00
+beq		$rt, $rs, label //ITYPE2
+bne 	$rt, $rs, label
+lbu 	$rt, 0x00($rs)  //ITYPE3
+lhu 	$rt, 0x00($rs)
+ll 		$rt, 0x00($rs)
+lw 		$rt, 0x00($rs)
+sb 		$rt, 0x00($rs)
+sc 		$rt, 0x00($rs)
+sh		$rt, 0x00($rs)
+sw 		$rt, 0x00($rs)
+lui 	$rt, 0x00  		//ITYPE4
 
 J-Type
 j		label
