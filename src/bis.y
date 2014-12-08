@@ -32,6 +32,7 @@ inst_t *node = NULL;
 %token <s>    ID
 %token <s>    REG
 %token <ival> INT
+%token NOP
 %token LPAR
 %token RPAR
 %token COMA
@@ -57,6 +58,15 @@ inst
 	: rinst
 	| iinst
 	| jinst
+	| NOP
+		{
+			node = (inst_t*)malloc(sizeof(inst_t));
+			memset(node, 0x00, sizeof(inst_t));
+			node->line = yylineno;
+			node->type = R;
+			add_inst(node);
+			node = NULL;
+		}
 	;
 
 rinst

@@ -38,7 +38,8 @@
 	("beq"|"bne")							BeginToken(yytext); yylval.s = strdup(yytext); return ITYPE2;
 	("lbu"|"lhu"|"ll"|"lw"|"sb"|"sc"|"sh"|"sw")			BeginToken(yytext); yylval.s = strdup(yytext); return ITYPE3;
 	"lui"								BeginToken(yytext); yylval.s = strdup(yytext); return ITYPE4;
-	
+	"nop"								BeginToken(yytext); return NOP;
+
 	("j"|"jal")							BeginToken(yytext); yylval.s = strdup(yytext); return JTYPE;
 	"$r"[1-2]?[0-9]|"$r30"|"$r31"					BeginToken(yytext); yylval.s = strdup(yytext); return REG;
 	"$zero" 							BeginToken(yytext); yylval.s = strdup(yytext); return REG;

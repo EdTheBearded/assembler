@@ -7,6 +7,8 @@
 
 int debug=0;
 
+extern char *inname;
+
 static int eof = 0;
 static int nRow = 0;
 static int nBuffer = 0;
@@ -50,7 +52,7 @@ extern FILE *infile;
     vsprintf(errmsg, errorstring, args);
     va_end(args);
 
-	printf("file:%d:%d: %s\n", nRow, start, errmsg);
+	printf("%s:%d:%d: %s\n", inname, nRow, start, errmsg);
   
   	fprintf(stdout, "%.*s", lBuffer, buffer);
   	

@@ -35,6 +35,8 @@ typedef struct inst_s{
 	struct inst_s *next;	
 } inst_t;
 
+void usage();
+
 int htoi(char *s);
 
 int btoi(char *s);
@@ -46,6 +48,8 @@ int add_label(int line, char *name);
 void add_inst(inst_t *node);
 
 void resolve_names();
+
+void bubble_check();
 
 uint32_t opt(char *s);
 
