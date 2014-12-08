@@ -6,7 +6,7 @@ Implemented instructions on *types.txt*, also grouped by their "subtypes" under 
 
 **Compilation:** <pre>$ make</pre>
 As simple as that.  
-  
+<br>
 **Usage:** <pre>$ ./asm *infile* [-b|-h] [-o *outfile*]</pre>
 **-b** activate debugging info. (still needs work)  
 **-h** print help message  
