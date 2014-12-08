@@ -18,11 +18,5 @@ all:
 	mv lex.yy.c $(SRCFOLDER)/
 	$(CC) $(FLAGS) $(OBJECTS) $(LIBS) -o $(TARGET)
 
-#debug flex
-flex:
-	$(BISON) -d $(addprefix $(SRCFOLDER)/, $(BISON_SRC).y)
-	$(FLEX) $(FLEX_SRC).l
-	$(CC) $(FLAGS) lex.yy.c $(LIBS)  -o l
-
 clean:
 	rm -rf $(addprefix $(SRCFOLDER)/, $(BISON_SRC).tab.*) $(addprefix $(SRCFOLDER)/, lex.yy.c) $(TARGET)

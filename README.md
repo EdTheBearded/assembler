@@ -5,10 +5,10 @@
 Implemented instructions on *types.txt*, also grouped by their "subtypes" under R/I/J-Types. Error handling was treated following [Christian Hagen's article](http://www.ibm.com/developerworks/library/l-flexbison/).
 
 **Compilation:** <pre>$ make</pre>
-As simple as that. (`make flex` would be used for flex debugging, but the debugging feature needs "debugging" :D).
+As simple as that.
 
-**Usage:** <pre>$ ./asm *infile* [-d|-h] [-o *outfile*]</pre>
-**-d** activate debugging info. (still needs work)  
+**Usage:** <pre>$ ./asm *infile* [-b|-h] [-o *outfile*]</pre>
+**-b** activate debugging info. (still needs work)  
 **-h** print help message  
 **-o** specify output file name to *outfile*, if not specified, file will be named *a* by default.
 
