@@ -5,7 +5,7 @@
 Implemented instructions on *types.txt*, also grouped by their "subtypes" under R/I/J-Types. Error handling was treated following [Christian Hagen's article](http://www.ibm.com/developerworks/library/l-flexbison/).
 
 **Compilation:** <pre>$ make</pre>
-As simple as that.
+As simple as that.  
 
 **Usage:** <pre>$ ./asm *infile* [-b|-h] [-o *outfile*]</pre>
 **-b** activate debugging info. (still needs work)  
