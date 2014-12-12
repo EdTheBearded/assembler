@@ -62,6 +62,7 @@ inst
 		{
 			node = (inst_t*)malloc(sizeof(inst_t));
 			memset(node, 0x00, sizeof(inst_t));
+			node->name = NULL;
 			node->line = yylineno;
 			node->type = R;
 			add_inst(node);

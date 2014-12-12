@@ -49,8 +49,6 @@ void add_inst(inst_t *node);
 
 void resolve_names();
 
-void bubble_check();
-
 uint32_t opt(char *s);
 
 int reg(char *s);

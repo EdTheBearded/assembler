@@ -77,10 +77,22 @@ int main(int argc, char *argv[]) {
 	if (getNextLine() == 0)
 		yyparse();
 
+	/*check if control is last instruction, and adds a nop*/
+	if(is_tail->name != NULL && (is_tail->name[0] == 'j' || is_tail->name[0] == 'b')){
+		is_tail->next = (inst_t*)malloc(sizeof(inst_t));
+		memset(is_tail->next, 0x00, sizeof(inst_t));
+		is_tail->next->line = is_tail->line;
+		is_tail->next->addr = is_tail->addr + 4;
+		is_tail = is_tail->next;
+		is_tail->type = R;
+	}
+
 	if(debug == 1) printf("\n========= NAME SOLVING STAGE =========\n");
 	resolve_names();
-	if(debug == 1) printf("\n========= BUBBLE CHECK STAGE =========\n");
-	bubble_check();
+
+	if(debug == 1)
+		for(ind = insts; ind != NULL; ind = ind->next)
+			printf("%08x: %s\n", ind->addr, ind->name);
 
 	if(error == 0){
 		outfile = fopen(outname, "w");
@@ -120,8 +132,8 @@ int main(int argc, char *argv[]) {
 void usage(char *name){
 
 	printf("\tASM - Simple MIPS assembler\n\
-Usage: %s INPUTNAME [OPTIONS]\n\
-OPTIONS\n\
+Usage:\n %s INPUTNAME [OPTIONS]\n\
+Options:\n\
   -o [FILENAME]\t\tdefine output file name to FILENAME (default is 'a')\n\
   -b           \t\tset internal debug flag (prints useful asm debug info)\n\
   -h           \t\tprint this help message\n", name);
@@ -189,7 +201,7 @@ int add_label(int line, char *name){
 		}
 		if(!strcmp(i->name, name)){
 			error = 1;
-				return 0;
+			return 0;
 		}
 		else{
 			i->next = (label_t*)malloc(sizeof(label_t));
@@ -206,14 +218,38 @@ int add_label(int line, char *name){
 
 void add_inst(inst_t *node){
 
+	/*bubble flag*/
+	static int bubble = -1;
+
 	node->addr = addr_cnt;
 	if(insts == NULL){
 		insts = node;
 		is_tail = insts;
 	}
 	else{
+		/*if we need a nop, and node isnt one, we create one*/
+		if(bubble >= 0 && node->name != NULL){
+			/*insert into instruction list*/
+			is_tail->next = (inst_t*)malloc(sizeof(inst_t));
+			memset(is_tail->next, 0x00, sizeof(inst_t));
+			is_tail = is_tail->next;
+			is_tail->line = bubble;
+			is_tail->type = R;
+			/*give it a new address*/
+			is_tail->addr = addr_cnt;
+			/*corrects the node address, adding 4 to it*/
+			node->addr += 4;
+			/*and corrects the global address counter*/
+			addr_cnt += 4;
+		}
 		is_tail->next = node;
 		is_tail = is_tail->next;
+	}
+	/*avoid double nop insertion*/
+	bubble = -1;
+	/*if control instruction, next call must treat nop insertion*/
+	if(node->name != NULL && (node->name[0] == 'j' || node->name[0] == 'b')){
+		bubble = node->line;
 	}
 
 	addr_cnt += 4;
@@ -251,13 +287,14 @@ void resolve_names(){
 			}
 			else{
 				i->imm = j->addr - i->addr - 4;
-				if((i->imm & 0x80000000) && (-i->imm <= 0x0000FFFF)){
-					i->imm = 0x0000FFFF & i->imm;
-				}
-				else if(i->imm > 0x0000FFFF){
+				if(i->imm > 32767 || i->imm < -32768){
 					error = 1;
 					printf("%s:%d:: target too far away for branch instruction\n", inname, i->line);
 				}
+				else{
+					i->imm &= 0x0000FFFF;
+				}
+				i->imm >>= 2;
 				if(debug == 1 && i->name[0] == 'b') printf("%s %s, %s, %s resolved into %s %s, %s, 0x%08x\n", i->name, i->rs, i->rt, i->label,
 																											  i->name, i->rs, i->rt, i->imm);
 				if(debug == 1 && i->name[0] == 'l') printf("%s %s, %s(%s) resolved into %s %s, 0x%08x(%s)\n", i->name, i->rt, i->label, i->rs,
@@ -265,118 +302,6 @@ void resolve_names(){
 				free(i->label);
 				i->label = NULL;
 			}
-			i->imm >>= 2;
-		}
-	}
-
-}
-
-/* checks for nops after control instruction (following instruction is always executed, so if programmer
-doesnt write  nop, it will cause error), and data hazard between load operations, inserting nops to space them (load/use hazard)*/
-void bubble_check(){
-
-	inst_t *i, *node = NULL;
-	int target = 0;
-	int addr_off = 0;
-
-	//run through the instructions list
-	for(i = insts; i != NULL; i = i->next){
-		//corrects the addresses when we add a nop to the list
-		i->addr += addr_off;
-		if(debug == 1){
-			printf("%08x: %s\n", i->addr, i->name);
-		}
-		//control situation
-		if(i->name != NULL && (i->name[0] == 'j' || i->name[0] == 'b')){
-			//end of program we add a nop anyway (lets avoid finding garbage on memory)
-			if(i->next == NULL){
-				node = (inst_t*)malloc(sizeof(inst_t));
-				memset(node, 0x00, sizeof(inst_t));
-				node->line = i->line;
-				//this address must follow this instructions address
-				node->addr = i->addr + 4;
-				//correction factor for address is cumulative
-				addr_off += 4;
-				node->type = R;
-				i->next = node;
-				if(debug == 1){
-					printf("%08x: nop\t<- inserted\n", node->addr);
-				}
-				node = NULL;
-				//jumps the recently added nop(avoid address to be corrected twice)
-				i = i->next;
-			}
-			//if its not a nop, we add one. (if it is, good!)
-			else if(i->next->name != NULL){
-				node = (inst_t*)malloc(sizeof(inst_t));
-				memset(node, 0x00, sizeof(inst_t));
-				node->line = i->line;
-				//this address must follow this instructions address
-				node->addr = i->addr + 4;
-				//correction factor for address is cumulative
-				addr_off += 4;
-				node->type = R;
-				node->next = i->next;
-				i->next = node;
-				if(debug == 1){
-					printf("%08x: nop\t<- inserted\n", node->addr);
-				}
-				node = NULL;
-				//jumps the recently added nop(avoid address to be corrected twice)
-				i = i->next;	
-			}
-		}
-		//load/use hazards
-		else if(i->name != NULL && (i->name[0] == 'l' && i->name[1] != 'u')){
-			//the register we need to check for hazards
-			target = reg(i->rt);
-			//we need a following instruction, if we reached end, our work is done. 
-			if(i->next != NULL){
-				//if R-type, we check target with RS and RT.
-				if(i->next->type == R){
-					if(target == reg(i->next->rs) || target ==reg(i->next->rt)){
-						node = (inst_t*)malloc(sizeof(inst_t));
-						memset(node, 0x00, sizeof(inst_t));
-						node->line = i->line;
-						//this address must follow this instructions address
-						node->addr = i->addr + 4;
-						//correction factor for address is cumulative
-						addr_off += 4;
-						node->type = R;
-						node->next = i->next;
-						i->next = node;
-						if(debug == 1){
-							printf("%08x: nop\t<- inserted\n", node->addr);
-						}
-						node = NULL;
-						//jumps the recently added nop(avoid address to be corrected twice)
-						i = i->next;
-					}
-				}
-				//if I-type, we only need to check RS
-				else if(i->next->type == I){
-					if(target == reg(i->next->rs)){
-						node = (inst_t*)malloc(sizeof(inst_t));
-						memset(node, 0x00, sizeof(inst_t));
-						node->line = i->line;
-						//this address must follow this instructions address
-						node->addr = i->addr + 4;
-						//correction factor for address is cumulative
-						addr_off += 4;
-						node->type = R;
-						node->next = i->next;
-						i->next = node;
-						if(debug == 1){
-							printf("%08x: nop\t<- inserted\n", node->addr);
-						}
-						node = NULL;
-						//jumps the recently added nop(avoid address to be corrected twice)
-						i = i->next;
-					}
-				}
-			}
-			//not important, just to make things "clean"
-			target = 0;
 		}
 	}
 

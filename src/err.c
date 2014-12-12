@@ -52,15 +52,15 @@ extern FILE *infile;
     vsprintf(errmsg, errorstring, args);
     va_end(args);
 
-	printf("%s:%d:%d: %s\n", inname, nRow, start, errmsg);
+	printf("%s:%d:%d: %s", inname, nRow, start, errmsg);
   
-  	fprintf(stdout, "%.*s", lBuffer, buffer);
+  fprintf(stdout, "%.*s", lBuffer, buffer);
   	
 	if (  eof  ) {
-    	for (i=0; i<lBuffer; i++)
-    		fprintf(stdout, " ");
-    		fprintf(stdout, "^-EOF\n");
-    	}
+  	for (i=0; i<lBuffer; i++)
+  		fprintf(stdout, " ");
+  		fprintf(stdout, "^-EOF\n");
+  	}
     else {
     	for (i=1; i<start; i++)
     		fprintf(stdout, " ");
